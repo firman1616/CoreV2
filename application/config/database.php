@@ -76,10 +76,11 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'admin',
-	'password' => 'admin',
+	'username' => 'root',
+	'password' => '123',
 	'database' => 'sso',
 	'dbdriver' => 'postgre',
+	'port' => '5400',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),

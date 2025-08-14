@@ -16,45 +16,49 @@
           <div class="clearfix"></div>
         </div>
       </div>
+
       <ul class="nav nav-primary">
+        <!-- Dashboard selalu muncul -->
         <li class="nav-item active">
           <a href="<?= site_url('Dashboard') ?>">
             <i class="fas fa-home"></i>
             <p>Dashboard</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a data-toggle="collapse" href="#base">
-            <i class="fas fa-layer-group"></i>
-            <p>Setting</p>
-            <span class="caret"></span>
-          </a>
-          <div class="collapse" id="base">
-            <ul class="nav nav-collapse">
-              <li>
-                <a href="<?= site_url('Modul') ?>">
-                  <span class="sub-item">Modul</span>
-                </a>
-              </li>
-              <li>
-                <a href="<?= site_url('Menu') ?>">
-                  <span class="sub-item">Menu</span>
-                </a>
-              </li>
-              <li>
-                <a href="<?= site_url('Role') ?>">
-                  <span class="sub-item">Role</span>
-                </a>
-              </li>
-              <li>
-                <a href="<?= site_url('User') ?>">
-                  <span class="sub-item">User</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </li>
+
+        <!-- Modul lain sesuai akses -->
+        <?php foreach ($this->session->userdata('modul_akses') as $modul): ?>
+          <?php if (empty($modul['menus'])): ?>
+            <li class="nav-item">
+              <a href="<?= site_url($modul['url_modul']) ?>">
+                <i class="<?= $modul['icon'] ?>"></i>
+                <p><?= $modul['name'] ?></p>
+              </a>
+            </li>
+          <?php else: ?>
+            <li class="nav-item">
+              <a data-toggle="collapse" href="#modul<?= $modul['id'] ?>">
+                <i class="<?= $modul['icon'] ?>"></i>
+                <p><?= $modul['name'] ?></p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="modul<?= $modul['id'] ?>">
+                <ul class="nav nav-collapse">
+                  <?php foreach ($modul['menus'] as $menu): ?>
+                    <li>
+                      <a href="<?= site_url($menu['url']) ?>">
+                        <span class="sub-item"><?= $menu['name'] ?></span>
+                      </a>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
+            </li>
+          <?php endif; ?>
+        <?php endforeach; ?>
       </ul>
+
+
     </div>
   </div>
 </div>

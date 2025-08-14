@@ -1,0 +1,130 @@
+<div class="content">
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title"><?= $title ?></h4>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Form</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="" id="roleForm" name="roleForm" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="id" id="id">
+                            <div class="form-group">
+                                <label for="username">Nama Role</label>
+                                <input type="text" class="form-control" id="nama_role" name="nama_role" placeholder="Role">
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="save-data">
+                                <span class="btn-label">
+                                    <i class="fa fa-save"></i>
+                                </span>
+                                Simpan Data
+                            </button>
+                            <button type="button" class="btn btn-danger" id="cancel-edit" style="display: none;">
+                                <i class="fa fa-times"></i> Cancel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Table Role</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div id="div-table-role"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal akses -->
+<!-- Modal -->
+<div class="modal fade" id="aksesModal" tabindex="-1" role="dialog" aria-labelledby="aksesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="aksesForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aksesModalLabel">Akses Role</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Hidden input untuk simpan ID dari tbl_role -->
+                    <input type="hidden" id="role_id" name="role_id">
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox"  value="" id="aksesAll">
+                            <span class="form-check-sign">ALL</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="1" id="aksesCreate">
+                            <span class="form-check-sign">CREATE</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="2" id="aksesRead">
+                            <span class="form-check-sign">READ</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="3" id="aksesUpdate">
+                            <span class="form-check-sign">UPDATE</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="4" id="aksesDelete">
+                            <span class="form-check-sign">DELETE</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="5" id="aksesApprove">
+                            <span class="form-check-sign">APPROVE</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="6" id="aksesPrint">
+                            <span class="form-check-sign">PRINT</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="7" id="aksesCancel">
+                            <span class="form-check-sign">CANCEL</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

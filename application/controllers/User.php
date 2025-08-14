@@ -1,0 +1,115 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class User extends CI_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        // if (!$this->session->userdata('logged_in')) {
+        //     redirect('login');
+        // }
+    }
+
+    public function index()
+    {
+        $data = [
+            'title' => 'User',
+            'conten' => 'user/index',
+            'footer_js' => array('assets/js/user.js')
+        ];
+        $this->load->view('template/conten', $data);
+    }
+
+    function tableUser()
+    {
+        $data['user'] = $this->m_data->get_data('tbl_user')->result();
+
+        echo json_encode($this->load->view('user/user-table', $data, false));
+    }
+
+    function store()
+    {
+        $id = $this->input->post('id');
+        if ($id != null) {
+            $table = 'tbl_user';
+            $dataupdate = [
+                'nik' => $this->input->post('nik'),
+                'name' => $this->input->post('nama_user'),
+                'username' => $this->input->post('username'),
+                'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
+            ];
+            $where = array('id' => $id);
+            $this->m_data->update_data($table, $dataupdate, $where);
+        } else {
+            $table = 'tbl_user';
+            $data = [
+                'nik' => $this->input->post('nik'),
+                'name' => $this->input->post('nama_user'),
+                'username' => $this->input->post('username'),
+                'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
+                'status' => '1',
+                'created_at'  => date('Y-m-d H:i:s'),
+            ];
+            // $die(var_dump($data));
+            $this->m_data->simpan_data($table, $data);
+        }
+    }
+
+    public function user_akses($id)
+    {
+        // Ambil user dan data umum
+        $user = $this->m_data->get_data_by_id('tbl_user', ['id' => $id])->row();
+        $modul = $this->m_data->get_data('tbl_modul')->result();
+        $role = $this->m_data->get_data('tbl_role')->result();
+
+        // Ambil data akses dari tabel user_modul_akses
+        $akses_data = $this->db
+            ->where('user_id', $id)
+            ->get('tbl_user_modul_akses')
+            ->result();
+
+        // Buat mapping [modul_id => role_id]
+        $akses_map = [];
+        foreach ($akses_data as $a) {
+            $akses_map[$a->modul_id] = $a->role_id;
+        }
+
+        $data = [
+            'title'     => 'User Akses',
+            'conten'    => 'user/user-akses',
+            'footer_js' => ['assets/js/user.js'],
+            'akses'     => $this->m_data->get_data_by_id('tbl_user', ['id' => $id])->result(),
+            'user'      => $user,
+            'modul'     => $modul,
+            'role'      => $role,
+            'akses_map' => $akses_map  // Kirim ke view untuk preselect
+        ];
+
+        $this->load->view('template/conten', $data);
+    }
+
+
+    public function update_akses($user_id)
+    {
+        $modul_id = $this->input->post('modul_id');
+        $role_id  = $this->input->post('role_id');
+
+        // Hapus akses lama
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('tbl_user_modul_akses');
+
+        for ($i = 0; $i < count($modul_id); $i++) {
+            if (!empty($modul_id[$i]) && !empty($role_id[$i])) {
+                $this->db->insert('tbl_user_modul_akses', [
+                    'user_id'  => $user_id,
+                    'modul_id' => $modul_id[$i],
+                    'role_id'  => $role_id[$i]
+                ]);
+            }
+        }
+
+        echo json_encode(['status' => 'ok']);
+    }
+}

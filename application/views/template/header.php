@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Atlantis Lite - Bootstrap 4 Admin Dashboard</title>
+	<title><?= $title ?></title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="<?= base_url() ?>assets/template/assets/img/icon.ico" type="image/x-icon"/>
 
@@ -24,6 +24,8 @@
 
 	<!-- CSS Just for demo purpose, don't include it in your project -->
 	<link rel="stylesheet" href="<?= base_url() ?>assets/template/assets/css/demo.css">
+	<link href="<?= base_url() ?>assets/other/select2.min.css" rel="stylesheet" />
+    <link href="<?= base_url() ?>assets/other/select2-bootstrap4.min.css" rel="stylesheet" />
 </head>
 <body>
 	<div class="wrapper sidebar_minimize">

@@ -47,40 +47,40 @@ class M_user extends CI_Model
     $result = [];
 
     foreach ($query as $row) {
-      $modul_id = $row['modul_id'];
+      $modul_id = $row->modul_id;
 
       // Pastikan modul belum dibuat di array
       if (!isset($result[$modul_id])) {
         $result[$modul_id] = [
           'id' => $modul_id,
-          'name' => $row['modul_name'],
-          'icon' => $row['modul_icon'],
-          'url_modul' => $row['url_modul'],
+          'name' => $row -> modul_name,
+          'icon' => $row -> modul_icon,
+          'url_modul' => $row -> url_modul,
           'akses' => [],
           'menus' => []
         ];
       }
 
       // Simpan akses modul
-      if ($row['modul_akses'] !== null && !in_array($row['modul_akses'], $result[$modul_id]['akses'])) {
-        $result[$modul_id]['akses'][] = $row['modul_akses'];
+      if ($row->modul_akses !== null && !in_array($row->modul_akses, $result[$modul_id]['akses'])) {
+        $result[$modul_id]['akses'][] = $row->modul_akses;
       }
 
       // Kalau ada menu
-      if ($row['menu_id'] !== null) {
-        $menu_id = $row['menu_id'];
+      if ($row->menu_id !== null) {
+        $menu_id = $row->menu_id;
 
         if (!isset($result[$modul_id]['menus'][$menu_id])) {
           $result[$modul_id]['menus'][$menu_id] = [
             'id' => $menu_id,
-            'name' => $row['menu_name'],
-            'url' => $row['menu_url'],
+            'name' => $row->menu_name,
+            'url' => $row->menu_url,
             'akses' => []
           ];
         }
 
-        if ($row['menu_akses'] !== null && !in_array($row['menu_akses'], $result[$modul_id]['menus'][$menu_id]['akses'])) {
-          $result[$modul_id]['menus'][$menu_id]['akses'][] = $row['menu_akses'];
+        if ($row->menu_akses !== null && !in_array($row->menu_akses, $result[$modul_id]['menus'][$menu_id]['akses'])) {
+          $result[$modul_id]['menus'][$menu_id]['akses'][] = $row->menu_akses;
         }
       }
     }

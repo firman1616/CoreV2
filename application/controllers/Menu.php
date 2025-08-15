@@ -8,9 +8,9 @@ class Menu extends CI_Controller
     {
         parent::__construct();
         $this->load->model('M_setting', 'set');
-        // if (!$this->session->userdata('logged_in')) {
-        //     redirect('login');
-        // }
+        if (!$this->session->userdata('logged_in')) {
+            redirect('login');
+        }
     }
 
     public function index()

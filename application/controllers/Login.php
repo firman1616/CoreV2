@@ -38,7 +38,9 @@ class Login extends CI_Controller
             // Ambil modul & menu sesuai akses user (Dashboard otomatis dikecualikan di model)
             $modul_akses = $this->user->get_modul_by_user($user->id);
 
-            // Simpan data user ke session
+            // Pastikan dalam format array biasa sebelum masuk session
+            $modul_akses = json_decode(json_encode($modul_akses), true);
+
             $session_data = [
                 'id_user'     => $user->id,
                 'username'    => $user->username,
@@ -48,7 +50,6 @@ class Login extends CI_Controller
             ];
 
             $this->session->set_userdata($session_data);
-
             // Redirect ke halaman default
             redirect('dashboard');
         } else {

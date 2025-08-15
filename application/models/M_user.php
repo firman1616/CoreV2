@@ -15,38 +15,34 @@ class M_user extends CI_Model
   {
     $query = $this->db->query("
         SELECT 
-            m.id AS modul_id, 
-            m.name AS modul_name, 
-            m.icon AS modul_icon, 
-            m.url_modul,
-            uma.role_id AS modul_role_id,
-            ra_modul.akses AS modul_akses,
-            
-            mn.id AS menu_id, 
-            mn.name AS menu_name, 
-            mn.url AS menu_url,
-            uma_menu.role_id AS menu_role_id,
-            ra_menu.akses AS menu_akses
-        FROM tbl_user_modul_akses uma
-        JOIN tbl_modul m 
-            ON m.id = uma.modul_id
-        LEFT JOIN tbl_role_akses ra_modul 
-            ON ra_modul.role_id = uma.role_id 
-            AND ra_modul.akses IS NOT NULL
-
-        LEFT JOIN tbl_menu mn 
-            ON mn.modul_id = m.id
-        LEFT JOIN tbl_user_menu_akses uma_menu 
-            ON uma_menu.menu_id = mn.id 
-            AND uma_menu.user_id = uma.user_id
-        LEFT JOIN tbl_role_akses ra_menu 
-            ON ra_menu.role_id = uma_menu.role_id
-            AND ra_menu.akses IS NOT NULL
-
-        WHERE uma.user_id = {$user_id}
-          AND (m.url_modul != 'Dashboard' OR m.url_modul IS NULL)
-        ORDER BY m.id, mn.id
-    ")->result_array();
+          m.id AS modul_id, 
+          m.name AS modul_name, 
+          m.icon AS modul_icon, 
+          m.url_modul,
+          uma.role_id AS modul_role_id,
+          ra_modul.akses AS modul_akses,
+          mn.id AS menu_id, 
+          mn.name AS menu_name, 
+          mn.url AS menu_url,
+          uma_menu.role_id AS menu_role_id,
+          ra_menu.akses AS menu_akses
+      FROM tbl_user_modul_akses uma
+      JOIN tbl_modul m 
+          ON m.id = uma.modul_id
+      LEFT JOIN tbl_role_akses ra_modul 
+          ON ra_modul.role_id = uma.role_id 
+          AND ra_modul.akses IS NOT NULL
+      LEFT JOIN tbl_user_menu_akses uma_menu 
+          ON uma_menu.user_id = uma.user_id
+      LEFT JOIN tbl_menu mn 
+          ON mn.id = uma_menu.menu_id
+      LEFT JOIN tbl_role_akses ra_menu 
+          ON ra_menu.role_id = uma_menu.role_id
+          AND ra_menu.akses IS NOT NULL
+      WHERE uma.user_id = {$user_id}
+        AND (m.url_modul != 'Dashboard' OR m.url_modul IS NULL)
+      ORDER BY m.id, mn.id
+    ")->result();
 
     $result = [];
 
@@ -114,5 +110,28 @@ class M_user extends CI_Model
     }
 
     return $result;
+  }
+
+  public function get_modul_with_access($user_id)
+  {
+    $this->db->select('m.id, m.name, m.icon, m.url_modul');
+    $this->db->from('tbl_modul m');
+    $this->db->join('tbl_user_modul_akses uma', 'uma.modul_id = m.id');
+    $this->db->where('uma.user_id', $user_id);
+    $this->db->group_by(['m.id', 'm.name', 'm.icon', 'm.url_modul']);
+    $this->db->order_by('m.name', 'ASC');
+    return $this->db->get()->result();
+  }
+
+  public function get_menu_with_access($user_id, $modul_id)
+  {
+    $this->db->select('mn.id, mn.name, mn.url');
+    $this->db->from('tbl_menu mn');
+    $this->db->join('tbl_user_menu_akses uma', 'uma.menu_id = mn.id');
+    $this->db->where('uma.user_id', $user_id);
+    $this->db->where('mn.modul_id', $modul_id);
+    $this->db->group_by(['mn.id', 'mn.name', 'mn.url']);
+    $this->db->order_by('mn.name', 'ASC');
+    return $this->db->get()->result();
   }
 }

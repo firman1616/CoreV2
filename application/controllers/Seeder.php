@@ -31,7 +31,7 @@ class Seeder extends CI_Controller {
          */
         $this->db->insert('tbl_modul', [
             'name'       => 'Setting',
-            'icon'       => 'bx  bx-gear',
+            'icon'       => 'fas fa-wrench',
             'url_modul'  => 'Setting'
         ]);
 
@@ -73,6 +73,20 @@ class Seeder extends CI_Controller {
                 'akses'   => $i,
                 'role_id' => 1
             ]);
+        }
+
+         /**
+         * 7. Insert tbl_user_menu_akses (akses 1 sampai 7, role_id = 1)
+         */
+        $menu_role = [
+            ['user_id' => '1', 'role_id' => '1', 'menu_id' => 1],
+            ['user_id' => '1', 'role_id' => '1',  'menu_id' => 2],
+            ['user_id' => '1', 'role_id' => '1',  'menu_id' => 3],
+            ['user_id' => '1', 'role_id' => '1',  'menu_id' => 4],
+        ];
+
+        foreach ($menu_role as $mr) {
+            $this->db->insert('tbl_user_menu_akses', $mr);
         }
 
         // Commit transaksi

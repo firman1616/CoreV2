@@ -56,3 +56,4 @@ $route['item/uploadExcel'] = 'Item/uploadExcel';
 $route['exportExcel/(:any)/(:any)'] = 'ExportExcel/export/$1/$2';
 $route['exportExcel/(:any)/(:any)/(:any)'] = 'ExportExcel/export/$1/$2/$3';
 $route['metabase/export'] = 'LapStuffing/redirect_report';
+$route['migrate/(:num)'] = 'migrate/index/$1';

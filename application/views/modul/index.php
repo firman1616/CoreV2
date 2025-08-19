@@ -26,12 +26,14 @@
                                 <label for="username">Icon Modul</label>
                                 <input type="text" class="form-control" id="icon_modul" name="icon_modul" placeholder="fas fa-icon">
                             </div>
+                            <?php if (cek_menu_akses(1, 1, 1)): ?>
                                 <button type="submit" class="btn btn-primary" id="save-data">
                                     <span class="btn-label">
                                         <i class="fa fa-save"></i>
                                     </span>
                                     Simpan Data
                                 </button>
+                            <?php endif; ?>
                             <!-- <button type="submit" class="btn btn-primary" id="save-data">
                                 <span class="btn-label">
                                     <i class="fa fa-save"></i>

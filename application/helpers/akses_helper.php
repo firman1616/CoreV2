@@ -10,6 +10,28 @@ function cek_akses($modul_id, $akses_id)
     return isset($role_akses[$modul_id]) && in_array($akses_id, $role_akses[$modul_id]);
 }
 
+function cek_menu_akses($modul_id, $menu_id, $akses_id)
+{
+    $CI = &get_instance();
+    $CI->load->library('session');
+
+    $modul_akses = $CI->session->userdata('modul_akses');
+
+    if (!$modul_akses) return false;
+
+    foreach ($modul_akses as $modul) {
+        if ($modul['id'] == $modul_id) {
+            foreach ($modul['menus'] as $menu) {
+                if ($menu['id'] == $menu_id && in_array($akses_id, $menu['akses'])) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 function get_modul_akses_user()
 {
     $CI = &get_instance();

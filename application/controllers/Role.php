@@ -17,7 +17,8 @@ class Role extends CI_Controller
         $data = [
             'title' => 'Role',
             'conten' => 'role/index',
-            'footer_js' => array('assets/js/role.js')
+            'footer_js' => array('assets/js/role.js'),
+            'get_akses' => $this->m_data->get_data('tbl_akses')->result()
         ];
         $this->load->view('template/conten', $data);
     }

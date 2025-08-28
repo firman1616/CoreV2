@@ -71,7 +71,16 @@
                         </label>
                     </div>
 
-                    <div class="form-check">
+                    <?php foreach ($get_akses as $row) { ?>
+                        <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="akses[]" value="<?= $row->id ?>" id="aksesCreate">
+                            <span class="form-check-sign"><?= $row->name ?></span>
+                        </label>
+                    </div>
+                    <?php } ?>
+
+                    <!-- <div class="form-check">
                         <label class="form-check-label">
                             <input class="form-check-input" type="checkbox" name="akses[]" value="1" id="aksesCreate">
                             <span class="form-check-sign">CREATE</span>
@@ -118,7 +127,7 @@
                             <input class="form-check-input" type="checkbox" name="akses[]" value="7" id="aksesCancel">
                             <span class="form-check-sign">CANCEL</span>
                         </label>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>

@@ -182,6 +182,56 @@ class Migration_Migrate1 extends CI_Migration {
         ]);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('tbl_user', TRUE);
+
+        $this->dbforge->add_field([
+            'id' => [
+                'type' => 'SERIAL',
+            ],
+            'name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 75,
+                'null' => false,
+            ],
+        ]);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('tbl_status', TRUE);
+
+        // Insert default data
+        $statuses = [
+            ['name' => 'Draft'],
+            ['name' => 'In Progress'],
+            ['name' => 'Review'],
+            ['name' => 'Approve'],
+            ['name' => 'Done'],
+            ['name' => 'Cancel'],
+            ['name' => 'Reject'],
+        ];
+        $this->db->insert_batch('tbl_status', $statuses);
+
+        $this->dbforge->add_field([
+            'id' => [
+                'type' => 'SERIAL',
+            ],
+            'name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 75,
+                'null' => false,
+            ],
+        ]);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('tbl_akses', TRUE);
+
+        // Insert default data
+        $akseses = [
+            ['name' => 'Create'],
+            ['name' => 'Read'],
+            ['name' => 'Update'],
+            ['name' => 'Delete'],
+            ['name' => 'Approve'],
+            ['name' => 'Print'],
+            ['name' => 'Cancel'],
+        ];
+        $this->db->insert_batch('tbl_akses', $akseses);
     }
 
     public function down()
@@ -194,6 +244,8 @@ class Migration_Migrate1 extends CI_Migration {
         $this->dbforge->drop_table('tbl_role_akses', TRUE);
         $this->dbforge->drop_table('tbl_user_modul_akses', TRUE);
         $this->dbforge->drop_table('tbl_user_menu_akses', TRUE);
+        $this->dbforge->drop_table('tbl_status', TRUE);
+        $this->dbforge->drop_table('tbl_akses', TRUE);
         
     }
 }

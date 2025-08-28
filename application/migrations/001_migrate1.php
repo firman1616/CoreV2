@@ -232,6 +232,22 @@ class Migration_Migrate1 extends CI_Migration {
             ['name' => 'Cancel'],
         ];
         $this->db->insert_batch('tbl_akses', $akseses);
+
+        $this->dbforge->add_field([
+            'id' => [
+                'type' => 'SERIAL',
+            ],
+            'akses_id' => [
+                'type' => 'int',
+                'null' => true,
+            ],
+            'level' => [
+                'type' => 'int',
+                'null' => true,
+            ],
+        ]);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('tbl_approve_level', TRUE);
     }
 
     public function down()
@@ -246,6 +262,6 @@ class Migration_Migrate1 extends CI_Migration {
         $this->dbforge->drop_table('tbl_user_menu_akses', TRUE);
         $this->dbforge->drop_table('tbl_status', TRUE);
         $this->dbforge->drop_table('tbl_akses', TRUE);
-        
+        $this->dbforge->drop_table('tbl_approve_level', TRUE);
     }
 }

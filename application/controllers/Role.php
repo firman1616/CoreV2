@@ -72,10 +72,25 @@ class Role extends CI_Controller
         echo json_encode($akses); // Contoh hasil: ["1", "2", "3"]
     }
 
+    public function get_approve_level($role_id)
+    {
+        $query = $this->db->get_where('tbl_approve_level', ['role_id' => $role_id]);
+        $result = $query->result();
+
+        $levels = [];
+
+        foreach ($result as $row) {
+            $levels[] = $row->level_id; // misalnya kolomnya "level_id"
+        }
+
+        echo json_encode($levels); // Contoh hasil: ["1", "2", "5"]
+    }
+
     public function simpan_akses()
     {
         $role_id = $this->input->post('role_id');
         $akses = $this->input->post('akses'); // array
+        $approve_levels = $this->input->post('approve_level'); // array
 
         if (!$role_id) {
             show_error('Role ID tidak ditemukan');
@@ -83,17 +98,43 @@ class Role extends CI_Controller
 
         // Hapus akses lama
         $this->db->delete('tbl_role_akses', ['role_id' => $role_id]);
+        $this->db->delete('tbl_approve_level', ['akses_id' => 5]); // bersihkan dulu agar tidak dobel
 
-        // Simpan akses baru: satu baris per akses
+        $hasApprove = false;
+
+        // Simpan akses baru
         if (!empty($akses)) {
             foreach ($akses as $akses_item) {
                 $this->db->insert('tbl_role_akses', [
                     'role_id' => $role_id,
-                    'akses' => $akses_item
+                    'akses'   => $akses_item
+                ]);
+
+                if ($akses_item == 5) {
+                    $hasApprove = true;
+                }
+            }
+        }
+
+        // Jika ada Approve, wajib punya minimal 1 level
+        if ($hasApprove) {
+            if (empty($approve_levels)) {
+                echo 'error_approve_level';
+                return;
+            }
+
+            foreach ($approve_levels as $level) {
+                $this->db->insert('tbl_approve_level', [
+                    'role_id' => $role_id,   // ✅ Tambahkan role_id
+                    'akses_id' => 5,
+                    'level'    => $level
                 ]);
             }
         }
 
-        echo 'success';
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Akses berhasil disimpan'
+        ]);
     }
 }

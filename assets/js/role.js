@@ -54,20 +54,29 @@ $(document).ready(function () {
 	$("body").on("click", ".akses", function () {
 		var id = $(this).data("id");
 		$("#role_id").val(id);
+
+		// Reset checkbox akses
 		$('#aksesForm input[type="checkbox"]')
 			.not("#aksesAll")
 			.prop("checked", false);
 		$("#aksesAll").prop("checked", false);
+		$("#approve-levels input[type='checkbox']").prop("checked", false);
+		$("#approve-levels").hide();
 
-		// Dapatkan data akses lama
+		// Ambil akses lama
 		$.get(BASE_URL + "Role/get_akses/" + id, function (res) {
-			var akses = JSON.parse(res); // res = [1, 2, 3]
+			var akses = JSON.parse(res);
 			akses.forEach(function (a) {
 				$('#aksesForm input[type="checkbox"][value="' + a + '"]').prop(
 					"checked",
 					true
 				);
 			});
+
+			// Tampilkan approve-levels kalau akses approve dicentang
+			if (akses.includes("5")) {
+				$("#approve-levels").show();
+			}
 
 			// Update checkbox ALL
 			var total = $('#aksesForm input[type="checkbox"]').not(
@@ -79,35 +88,39 @@ $(document).ready(function () {
 			$("#aksesAll").prop("checked", total === checked);
 		});
 
+		// Ambil approve level lama
+		$.get(BASE_URL + "Role/get_approve_level/" + id, function (res) {
+			var levels = JSON.parse(res);
+			levels.forEach(function (lvl) {
+				$('#approve-levels input[type="checkbox"][value="' + lvl + '"]').prop(
+					"checked",
+					true
+				);
+			});
+		});
+
 		$("#aksesModal").modal("show");
 	});
 
 	// ✅ Tambahan: Submit Form Akses
-	// $('#aksesForm').on('submit', function (e) {
-	//     e.preventDefault();
-	//     var formData = $(this).serialize();
-
-	//     $.ajax({
-	//         url: BASE_URL + "Role/simpan_akses",
-	//         type: 'POST',
-	//         data: formData,
-	//         success: function (res) {
-	//             $('#aksesModal').modal('hide');
-	//             swal("Berhasil!", "Akses berhasil disimpan!", {
-	//                 icon: "success",
-	//                 buttons: false,
-	//                 timer: 1500,
-	//             });
-	//             tableRole(); // Refresh table jika perlu
-	//         },
-	//         error: function () {
-	//             swal("Gagal!", "Terjadi kesalahan saat menyimpan akses.", "error");
-	//         }
-	//     });
-	// });
-
 	$("#aksesForm").on("submit", function (e) {
 		e.preventDefault();
+
+		// Cek apakah approve dicentang
+		let approveChecked = $("input.akses-checkbox[data-id='5']").is(":checked");
+		let approveLevelsChecked = $("#approve-levels input:checked").length;
+
+		if (approveChecked && approveLevelsChecked === 0) {
+			swal.fire({
+				icon: "info",
+				title: "Approve Aktif",
+				text: "Silakan pilih level approve yang diinginkan",
+				showConfirmButton: true,
+				timer: 2000,
+			});
+			return;
+		}
+
 		var formData = $(this).serialize();
 
 		$.ajax({
@@ -117,21 +130,62 @@ $(document).ready(function () {
 			success: function (res) {
 				if (res.trim() === "success") {
 					$("#aksesModal").modal("hide");
-					swal("Berhasil!", "Akses berhasil disimpan!", {
+					Swal.fire({
 						icon: "success",
-						buttons: false,
-						timer: 1500,
+						title: "Berhasil",
+						text: "Data Berhasil Disimpan",
+						showConfirmButton: false,
+						timer: 2000,
 					});
-					tableRole(); // Optional: reload data
+					tableRole();
+				} else if (res.trim() === "error_approve_level") {
+					Swal.fire({
+						icon: "warning",
+						title: "Approve Nonaktif",
+						text: "Semua level approve otomatis di-reset",
+						showConfirmButton: false,
+						timer: 2000,
+					});
 				} else {
-					swal("Gagal!", "Server mengembalikan respon tidak valid.", "error");
+					Swal.fire(
+						"Gagal!",
+						"Server mengembalikan respon tidak valid.",
+						"error"
+					);
 				}
 			},
 			error: function () {
-				swal("Gagal!", "Terjadi kesalahan saat menyimpan akses.", "error");
+				Swal.fire("Gagal!", "Terjadi kesalahan saat menyimpan akses.", "error");
 			},
 		});
 	});
+
+	// $("#aksesForm").on("submit", function (e) {
+	// 	e.preventDefault();
+	// 	var formData = $(this).serialize();
+
+	// 	$.ajax({
+	// 		url: BASE_URL + "Role/simpan_akses",
+	// 		type: "POST",
+	// 		data: formData,
+	// 		success: function (res) {
+	// 			if (res.trim() === "success") {
+	// 				$("#aksesModal").modal("hide");
+	// 				Swal("Berhasil!", "Akses berhasil disimpan!", {
+	// 					icon: "success",
+	// 					buttons: false,
+	// 					timer: 1500,
+	// 				});
+	// 				tableRole(); // Optional: reload data
+	// 			} else {
+	// 				swal("Gagal!", "Server mengembalikan respon tidak valid.", "error");
+	// 			}
+	// 		},
+	// 		error: function () {
+	// 			swal("Gagal!", "Terjadi kesalahan saat menyimpan akses.", "error");
+	// 		},
+	// 	});
+	// });
 
 	// $("#aksesAll").on("change", function () {
 	// 	var isChecked = $(this).is(":checked");

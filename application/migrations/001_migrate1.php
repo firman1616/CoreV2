@@ -237,6 +237,10 @@ class Migration_Migrate1 extends CI_Migration {
             'id' => [
                 'type' => 'SERIAL',
             ],
+            'role_id' => [
+                'type' => 'int',
+                'null' => true,
+            ],
             'akses_id' => [
                 'type' => 'int',
                 'null' => true,

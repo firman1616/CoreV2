@@ -74,17 +74,21 @@ class Role extends CI_Controller
 
     public function get_approve_level($role_id)
     {
-        $query = $this->db->get_where('tbl_approve_level', ['role_id' => $role_id]);
+        $query = $this->db->get_where('tbl_approve_level', [
+            'role_id'  => $role_id,
+            'akses_id' => 5 // hanya ambil approve
+        ]);
         $result = $query->result();
 
         $levels = [];
 
         foreach ($result as $row) {
-            $levels[] = $row->level_id; // misalnya kolomnya "level_id"
+            $levels[] = $row->level; // kolomnya "level"
         }
 
-        echo json_encode($levels); // Contoh hasil: ["1", "2", "5"]
+        echo json_encode($levels); // contoh hasil: ["1", "2", "5"]
     }
+
 
     public function simpan_akses()
     {
@@ -98,7 +102,10 @@ class Role extends CI_Controller
 
         // Hapus akses lama
         $this->db->delete('tbl_role_akses', ['role_id' => $role_id]);
-        $this->db->delete('tbl_approve_level', ['akses_id' => 5]); // bersihkan dulu agar tidak dobel
+        $this->db->delete('tbl_approve_level', [
+            'role_id'  => $role_id,
+            'akses_id' => 5
+        ]); // bersihkan dulu agar tidak dobel
 
         $hasApprove = false;
 

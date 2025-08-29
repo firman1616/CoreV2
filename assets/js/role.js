@@ -91,12 +91,22 @@ $(document).ready(function () {
 		// Ambil approve level lama
 		$.get(BASE_URL + "Role/get_approve_level/" + id, function (res) {
 			var levels = JSON.parse(res);
-			levels.forEach(function (lvl) {
-				$('#approve-levels input[type="checkbox"][value="' + lvl + '"]').prop(
-					"checked",
-					true
-				);
-			});
+
+			// reset semua approve level
+			$('#approve-levels input[type="checkbox"]').prop("checked", false);
+
+			// centang yang sesuai data
+			if (levels.length > 0) {
+				$("#approve-levels").slideDown(); // tampilkan kalau ada data
+				levels.forEach(function (lvl) {
+					$('#approve-levels input[type="checkbox"][value="' + lvl + '"]').prop(
+						"checked",
+						true
+					);
+				});
+			} else {
+				$("#approve-levels").slideUp(); // sembunyikan kalau kosong
+			}
 		});
 
 		$("#aksesModal").modal("show");

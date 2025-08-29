@@ -61,73 +61,43 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Hidden input untuk simpan ID dari tbl_role -->
                     <input type="hidden" id="role_id" name="role_id">
 
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox"  value="" id="aksesAll">
+                            <input class="form-check-input" type="checkbox" value="" id="aksesAll">
                             <span class="form-check-sign">ALL</span>
                         </label>
                     </div>
 
                     <?php foreach ($get_akses as $row) { ?>
-                        <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="<?= $row->id ?>" id="aksesCreate">
-                            <span class="form-check-sign"><?= $row->name ?></span>
-                        </label>
-                    </div>
+                        <div class="form-check ml-2">
+                            <label class="form-check-label">
+                                <input 
+                                    class="form-check-input akses-checkbox" 
+                                    type="checkbox" 
+                                    name="akses[]" 
+                                    value="<?= $row->id ?>" 
+                                    data-id="<?= $row->id ?>"
+                                >
+                                <span class="form-check-sign"><?= $row->name ?></span>
+                            </label>
+                        </div>
+
+                        <!-- Container untuk Approve Levels -->
+                        <?php if ($row->id == 5) { ?>
+                            <div class="ml-4 mt-2" id="approve-levels" style="display:none;">
+                                <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" name="approve_level[]" value="<?= $i ?>">
+                                            <span class="form-check-sign">Approve Lv <?= $i ?></span>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
-
-                    <!-- <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="1" id="aksesCreate">
-                            <span class="form-check-sign">CREATE</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="2" id="aksesRead">
-                            <span class="form-check-sign">READ</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="3" id="aksesUpdate">
-                            <span class="form-check-sign">UPDATE</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="4" id="aksesDelete">
-                            <span class="form-check-sign">DELETE</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="5" id="aksesApprove">
-                            <span class="form-check-sign">APPROVE</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="6" id="aksesPrint">
-                            <span class="form-check-sign">PRINT</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" name="akses[]" value="7" id="aksesCancel">
-                            <span class="form-check-sign">CANCEL</span>
-                        </label>
-                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>
